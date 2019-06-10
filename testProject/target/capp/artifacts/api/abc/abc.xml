@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/employeedetails" name="abc" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET">
+        <inSequence>
+            <payloadFactory media-type="xml">
+                <format>
+                    <Employees>
+                        <Employee>
+                            <Name>Viswa</Name>
+                        </Employee>
+                        <Employee>
+                            <Name>Shyam</Name>
+                        </Employee>
+                    </Employees>
+                </format>
+                <args/>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>
