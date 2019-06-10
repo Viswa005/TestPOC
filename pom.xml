@@ -2,26 +2,27 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.example.CAR_TestBuildProject</groupId>
-  <artifactId>CAR_TestBuildProject</artifactId>
+  <groupId>com.example.testProject</groupId>
+  <artifactId>testProject</artifactId>
   <version>1.0.0</version>
-  <packaging>carbon/application</packaging>
-  <name>CAR_TestBuildProject</name>
-  <description>CAR_TestBuildProject</description>
+  <packaging>pom</packaging>
+  <name>testProject</name>
+  <description>testProject</description>
   <properties>
-    <maven.car.deploy.skip>false</maven.car.deploy.skip>
-    <com.example.testProject.api_._abc>capp/EnterpriseServiceBus</com.example.testProject.api_._abc>
-    <maven.deploy.skip>true</maven.deploy.skip>
-    <artifact.types>jaggery/app=zip,synapse/priority-executor=xml,synapse/inbound-endpoint=xml,service/rule=aar,synapse/message-store=xml,event/stream=json,service/meta=xml,synapse/proxy-service=xml,bpel/workflow=zip,synapse/sequence=xml,synapse/endpointTemplate=xml,carbon/application=car,wso2/gadget=dar,synapse/api=xml,synapse/event-source=xml,synapse/message-processors=xml,event/receiver=xml,lib/dataservice/validator=jar,synapse/template=xml,synapse/endpoint=xml,lib/carbon/ui=jar,lib/synapse/mediator=jar,event/publisher=xml,synapse/local-entry=xml,synapse/task=xml,webapp/jaxws=war,registry/resource=zip,synapse/configuration=xml,service/axis2=aar,synapse/lib=zip,synapse/sequenceTemplate=xml,event/execution-plan=siddhiql,service/dataservice=dbs,web/application=war,lib/library/bundle=jar</artifact.types>
+    <maven.test.skip>false</maven.test.skip>
+    <CApp.type>bpel/workflow=zip,lib/registry/filter=jar,webapp/jaxws=war,lib/library/bundle=jar,service/dataservice=dbs,synapse/local-entry=xml,synapse/proxy-service=xml,carbon/application=car,registry/resource=zip,lib/dataservice/validator=jar,synapse/endpoint=xml,web/application=war,lib/carbon/ui=jar,service/axis2=aar,synapse/sequence=xml,synapse/configuration=xml,wso2/gadget=dar,lib/registry/handlers=jar,lib/synapse/mediator=jar,synapse/task=xml,synapse/api=xml,synapse/template=xml,synapse/message-store=xml,synapse/message-processors=xml,synapse/inbound-endpoint=xml</CApp.type>
   </properties>
-  <dependencies>
-    <dependency>
-      <groupId>com.example.testProject.api</groupId>
-      <artifactId>abc</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-  </dependencies>
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+      <id>wso2-nexus</id>
+      <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+    </repository>
+  </repositories>
   <pluginRepositories>
     <pluginRepository>
       <releases>
@@ -32,61 +33,95 @@
       <id>wso2-nexus</id>
       <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
     </pluginRepository>
-    <pluginRepository>
-      <id>wso2-maven2-repository-1</id>
-      <url>http://dist.wso2.org/maven2</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>wso2-nexus-repository-1</id>
-      <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-    </pluginRepository>
   </pluginRepositories>
   <build>
+    <directory>target/capp</directory>
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.4.0</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>package</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>mvn</executable>
+              <workingDirectory>${project.build.directory}</workingDirectory>
+              <arguments>
+                <argument>clean</argument>
+                <argument>package</argument>
+                <argument>-Dmaven.test.skip=${maven.test.skip}</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install</id>
+            <phase>install</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>mvn</executable>
+              <workingDirectory>${project.build.directory}</workingDirectory>
+              <arguments>
+                <argument>clean</argument>
+                <argument>install</argument>
+                <argument>-Dmaven.test.skip=${maven.test.skip}</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>mvn</executable>
+              <workingDirectory>${project.build.directory}</workingDirectory>
+              <arguments>
+                <argument>deploy</argument>
+                <argument>-Dmaven.test.skip=${maven.test.skip}</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration />
+      </plugin>
       <plugin>
         <artifactId>maven-eclipse-plugin</artifactId>
         <version>2.9</version>
         <configuration>
           <buildcommands />
           <projectnatures>
-            <projectnature>org.wso2.developerstudio.eclipse.distribution.project.nature</projectnature>
+            <projectnature>org.wso2.developerstudio.eclipse.esb.project.nature</projectnature>
           </projectnatures>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.wso2.maven</groupId>
-        <artifactId>maven-car-plugin</artifactId>
-        <version>2.1.1</version>
+        <artifactId>wso2-esb-api-plugin</artifactId>
+        <version>2.1.0</version>
         <extensions>true</extensions>
         <executions>
           <execution>
-            <id>car</id>
-            <phase>package</phase>
+            <id>api</id>
+            <phase>process-resources</phase>
             <goals>
-              <goal>car</goal>
+              <goal>pom-gen</goal>
             </goals>
+            <configuration>
+              <artifactLocation>.</artifactLocation>
+              <typeList>${artifact.types}</typeList>
+            </configuration>
           </execution>
         </executions>
         <configuration />
-      </plugin>
-      <plugin>
-        <groupId>org.wso2.maven</groupId>
-        <artifactId>maven-car-deploy-plugin</artifactId>
-        <version>1.0.0</version>
-        <extensions>true</extensions>
-        <configuration>
-          <carbonServers>
-            <CarbonServer>
-              <trustStorePath>D:/shyam/wso2ei-6.2.0/wso2ei-6.2.0/repository/resources/security/wso2carbon.jks</trustStorePath>
-              <trustStorePassword>wso2carbon</trustStorePassword>
-              <trustStoreType>JKS</trustStoreType>
-              <serverUrl>https://localhost:9443</serverUrl>
-              <userName>admin</userName>
-              <password>admin</password>
-              <operation>deploy</operation>
-            </CarbonServer>
-          </carbonServers>
-        </configuration>
       </plugin>
     </plugins>
   </build>
