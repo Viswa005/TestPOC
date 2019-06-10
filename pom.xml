@@ -9,6 +9,8 @@
   <name>testProject</name>
   <description>testProject</description>
   <properties>
+  <maven.deploy.skip>true</maven.deploy.skip>
+  <maven.car.deploy.skip>false</maven.car.deploy.skip>
     <maven.test.skip>false</maven.test.skip>
     <CApp.type>bpel/workflow=zip,lib/registry/filter=jar,webapp/jaxws=war,lib/library/bundle=jar,service/dataservice=dbs,synapse/local-entry=xml,synapse/proxy-service=xml,carbon/application=car,registry/resource=zip,lib/dataservice/validator=jar,synapse/endpoint=xml,web/application=war,lib/carbon/ui=jar,service/axis2=aar,synapse/sequence=xml,synapse/configuration=xml,wso2/gadget=dar,lib/registry/handlers=jar,lib/synapse/mediator=jar,synapse/task=xml,synapse/api=xml,synapse/template=xml,synapse/message-store=xml,synapse/message-processors=xml,synapse/inbound-endpoint=xml</CApp.type>
   </properties>
@@ -37,6 +39,25 @@
   <build>
     <directory>target/capp</directory>
     <plugins>
+    <plugin>
+        <groupId>org.wso2.maven</groupId>
+        <artifactId>maven-car-deploy-plugin</artifactId>
+        <version>1.0.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <carbonServers>
+            <CarbonServer>
+              <trustStorePath>D:/shyam/wso2ei-6.2.0/wso2ei-6.2.0/repository/resources/security/wso2carbon.jks</trustStorePath>
+              <trustStorePassword>wso2carbon</trustStorePassword>
+              <trustStoreType>JKS</trustStoreType>
+              <serverUrl>https://localhost:9443</serverUrl>
+              <userName>admin</userName>
+              <password>admin</password>
+              <operation>deploy</operation>
+            </CarbonServer>
+          </carbonServers>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
